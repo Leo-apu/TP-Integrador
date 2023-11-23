@@ -13,19 +13,15 @@ const TaskItemContainer = styled.li`
   display: grid;
   grid-template-columns: 1fr auto auto;
   align-items: center;
-  background-color: ${({ completed, progress }) => (completed ? '#4caf50' : progress ? 'yellow' : '#0c607bed')};
+  background-color: ${({ completed, progress }) => (completed ? '#4caf50' : progress ? '#f9f958' : '#def0f5ed')};
   text-decoration: ${({ completed }) => (completed ? 'line-through' : 'none')};
   font-weight: bold;
   border-radius: 10px;
-
-  .progress {
-    background-color: yellow;
-  }
 `;
 
 const Button = styled.button`
   padding: 12px 20px;
-  background-color: orange;
+  background-color: #d265b0;
   color: white;
   border: none;
   cursor: pointer;
@@ -35,7 +31,7 @@ const Button = styled.button`
   font-size: 20px;
 
   &:hover {
-    background-color: #0056b3;
+    background-color: violet;
   }
 `;
 
