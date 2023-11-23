@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import TaskList from './components/TaskList';
 import TaskForm from './components/TaskForm';
 import styled from 'styled-components';
+import {BrowserRouter as Router, Route, Routes , Link} from 'react-router-dom';
+import DeletedTaskList from './components/DeletedTaskList';
 
 const AppContainer = styled.div`
   display: flex;
@@ -11,31 +13,57 @@ const AppContainer = styled.div`
   min-height: 100vh;
   background-color: black;
   padding: 20px;
+
+  .pestaña {
+    text-decoration: none;
+    color: white;
+    background-color: #9351ca;
+    padding: 5px;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .active {
+    text-decoration: none;
+    color: white;
+    background-color: #4f0d53;
+    padding: 5px;
+    border-radius: 8px;
+    text-align: center;
+  }
+
 `;
 
 const Card = styled.div`
   width: 60%;
-  background-color: #0c607bed;
+  background-color: #930366ed;
   padding: 20px;
-  box-shadow: 0px 0px 20px 12px #ea770b;
-  margin-top: 20px;
+  box-shadow: 0px 0px 20px 12px #7e7e7e;
   border-radius: 10px;
 `;
 
 const Title = styled.h1`
-  font-size: 2.5rem;
+  font-size: 3.5rem;
   text-align: center;
   color: white;
 `;
 
 const App = () => {
   const storedTasks = JSON.parse(localStorage.getItem('tasks')) || [];
-  const [tasks, setTasks] = useState(storedTasks);
+  const storedDeletedTasks = JSON.parse(localStorage.getItem('deletedTasks')) || [];
 
+  const [tasks, setTasks] = useState(storedTasks);
+  const [deletedTasks, setDeletedTasks] = useState(storedDeletedTasks);
+
+  const [active,setActive] = useState(true);
   
   useEffect(() => {
     localStorage.setItem('tasks', JSON.stringify(tasks));
   }, [tasks]);
+
+  useEffect(() => {
+    localStorage.setItem('deletedTasks', JSON.stringify(deletedTasks));
+  }, [deletedTasks]);
 
   const handleComplete = (taskId) => {
     setTasks((prevTasks) =>
@@ -66,7 +94,13 @@ const App = () => {
   }
 
   const handleDelete = (taskId) => {
+    const deletedTask = tasks.find((task) => task.id === taskId);
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+    setDeletedTasks((prevDeletedTasks) => [...prevDeletedTasks, deletedTask]);
+  };
+
+  const handleDeletePerm = (taskId) => {
+    setDeletedTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
   };
 
   const handleAddTask = (taskName, taskDescription) => {
@@ -80,12 +114,32 @@ const App = () => {
     setTasks((prevTasks) => [...prevTasks, newTask]);
   };
 
+  const handleRestoreTask = (taskId) => {
+    const restoredTask = deletedTasks.find((task) => task.id === taskId);
+
+    setDeletedTasks((prevDeletedTasks) =>
+      prevDeletedTasks.filter((task) => task.id !== taskId)
+    );
+
+    setTasks((prevTasks) => [...prevTasks, restoredTask]);
+  };
+
+
   return (
     <AppContainer>
+      <Title>TAREAS</Title>
       <Card>
-        <Title>TAREAS</Title>
         <TaskForm onSubmit={handleAddTask} />
-        <TaskList tasks={tasks} onComplete={handleComplete} onProgress={handleProgress} onDelete={handleDelete} />
+        <Router>
+          <div style={{ display: 'flex', justifyContent: 'center' , marginTop: '20px' , gap: '5px' }}>
+            <Link className={`pestaña ${active === true && 'active'}`} onClick={() => setActive(true)} to='/' >Tareas</Link>
+            <Link className={`pestaña ${active === false && 'active'}`} onClick={() => setActive(false)} to='/deleted' >Tareas Eliminadas</Link>
+          </div>
+            <Routes>
+              <Route path="/deleted" element={<DeletedTaskList deletedTasks={deletedTasks} onRestoreTask={handleRestoreTask} onDeletePermanently={handleDeletePerm}/>} />
+              <Route path="/" element={<TaskList tasks={tasks} onComplete={handleComplete} onProgress={handleProgress} onDelete={handleDelete} />} />
+          </Routes>
+        </Router>        
       </Card>
     </AppContainer>
   );
