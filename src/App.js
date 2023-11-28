@@ -119,11 +119,10 @@ const App = () => {
     setTasks((prevTasks) => [...prevTasks, newTask]);
   };
 
-    // Función para generar un ID único manualmente
     const generateUniqueId = () => {
       return Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36);
     };
-    
+
   const handleRestoreTask = (taskId) => {
     const restoredTask = deletedTasks.find((task) => task.id === taskId);
 
