@@ -17,18 +17,18 @@ const AppContainer = styled.div`
   .pestaña {
     text-decoration: none;
     color: white;
-    background-color: #9351ca;
+    background-color: #4f0d53;
     padding: 5px;
-    border-radius: 8px;
+    border-radius: 2px;
     text-align: center;
   }
 
   .active {
     text-decoration: none;
     color: white;
-    background-color: #4f0d53;
+    background-color: #9351ca;
     padding: 5px;
-    border-radius: 8px;
+    border-radius: 2px;
     text-align: center;
   }
 
@@ -38,7 +38,7 @@ const Card = styled.div`
   width: 60%;
   background-color: #930366ed;
   padding: 20px;
-  box-shadow: 0px 0px 20px 12px #7e7e7e;
+  box-shadow: 0px 0px 15px 8px #7e7e7e;
   border-radius: 10px;
 `;
 
@@ -46,6 +46,7 @@ const Title = styled.h1`
   font-size: 3.5rem;
   text-align: center;
   color: white;
+  margin: 1rem 0 1rem 0;
 `;
 
 const App = () => {
@@ -64,6 +65,10 @@ const App = () => {
   useEffect(() => {
     localStorage.setItem('deletedTasks', JSON.stringify(deletedTasks));
   }, [deletedTasks]);
+
+  useEffect(() => {
+    setActive(window.location.pathname === '/' ? true : false);
+  }, []);
 
   const handleComplete = (taskId) => {
     setTasks((prevTasks) =>
@@ -98,14 +103,14 @@ const App = () => {
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
     setDeletedTasks((prevDeletedTasks) => [...prevDeletedTasks, deletedTask]);
   };
-
+  
   const handleDeletePerm = (taskId) => {
     setDeletedTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
   };
 
   const handleAddTask = (taskName, taskDescription) => {
     const newTask = {
-      id: tasks.length > 0 ? tasks[tasks.length - 1].id + 1 : 1,
+      id: generateUniqueId(),
       name: taskName,
       description: taskDescription,
       completed: false,
@@ -114,6 +119,11 @@ const App = () => {
     setTasks((prevTasks) => [...prevTasks, newTask]);
   };
 
+    // Función para generar un ID único manualmente
+    const generateUniqueId = () => {
+      return Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36);
+    };
+    
   const handleRestoreTask = (taskId) => {
     const restoredTask = deletedTasks.find((task) => task.id === taskId);
 
@@ -131,7 +141,7 @@ const App = () => {
       <Card>
         <TaskForm onSubmit={handleAddTask} />
         <Router>
-          <div style={{ display: 'flex', justifyContent: 'center' , marginTop: '20px' , gap: '5px' }}>
+          <div style={{ display: 'flex', justifyContent: 'center' , marginTop: '20px' , gap: '1px' }}>
             <Link className={`pestaña ${active === true && 'active'}`} onClick={() => setActive(true)} to='/' >Tareas</Link>
             <Link className={`pestaña ${active === false && 'active'}`} onClick={() => setActive(false)} to='/deleted' >Tareas Eliminadas</Link>
           </div>

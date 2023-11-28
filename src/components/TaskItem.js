@@ -141,7 +141,6 @@ const TaskItem = ({ task, onComplete,onProgress, onDelete ,index}) => {
 
   return (
     <Fragment>
-
       <TaskItemContainer completed={completed} progress={progress}>
         <TaskContent>
           <TaskName>{index}- {task.name}</TaskName>

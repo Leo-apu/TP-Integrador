@@ -139,7 +139,7 @@ const DeletedTaskList = ({ deletedTasks, onRestoreTask ,onDeletePermanently }) =
   return (
     <Fragment>
       <List>
-        {deletedTasks.map((task, index) => (
+        {deletedTasks.map((task,index) => (
           <DeletedTaskItem key={index} task={task} onRestore={onRestoreTask} onDeletePermanently={onDeletePermanently}/>
         ))}
       </List>
