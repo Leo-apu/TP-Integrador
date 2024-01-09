@@ -1,4 +1,6 @@
-# Trabajao Integrador - App Tareas
+# Trabajo Integrador - App Tareas
+
+Proyecto de una aplicacion de tareas.
 
 ## Grupo B - Integrantes
 
